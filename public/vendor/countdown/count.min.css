@@ -1,0 +1,10 @@
+ul#countdown li{font:1em/1.5em "Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;display:inline-block;background:transparent url(../img/timer-piece.png) no-repeat left top;width:104px;text-align:center}
+ul#countdown li span{font-size:3em;font-weight:700;color:#1f2225;height:108px;line-height:108px;position:relative}
+ul#countdown li span::before{content:'';width:100%;height:1px;border-top:1px solid #fff;position:absolute;top:31px}
+ul#countdown li p.timeRefDays,ul#countdown li p.timeRefHours,ul#countdown li p.timeRefMinutes,ul#countdown li p.timeRefSeconds{margin-top:1em;color:black;text-transform:uppercase;font-size:.875em;font-weight:700}
+.a2a_kit,.a2a_kit_size_32,.a2a_default_style{width:200px;padding-left:18px;text-align:center;margin:0 auto}
+
+#guardar{background-color:#5cb85c;border:1px solid #4cae4c;color:#fff}
+#suscribe{width:30%;font-size:1.5em;height:1.6em;padding-left:10px;box-sizing:border-box;-moz-box-sizing:border-box}
+#msgsuscribe{text-align:center;font-size:1.2em;width:80%;margin:0 auto;border:1px solid #d6e9c6;background-color:#dff0d8;color:#3c763d;border-radius:4px;padding:13px 10px}
+#logo{border-radius:25%;box-shadow:1px 1px 1px rgba(0,0,0,0.66);width:140px;height:140px}

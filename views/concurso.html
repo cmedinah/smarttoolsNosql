@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{concurso.nombre_concurso}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="concurso/clean-blog.min.css" rel="stylesheet">
+    <!-- Para el cocurso CSS -->
+    <link href="vendor/countdown/count.min.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="/">SmartTools</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/{{concurso.url_concurso}}">Listado de Vídeos</a>
+                    </li>
+                    <li>
+                        <a href="/{{concurso.url_concurso}}/rules">Reglas de Juego</a>
+                    </li>
+                    <li>
+                        <a href="/{{concurso.url_concurso}}/new">Subir vídeo</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('/static/{{concurso.identificacion}}/banner/{{concurso.banner}}')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>{{concurso.nombre_concurso}}</h1>
+                        <hr class="small">
+                        <span class="subheading">
+                            {{concurso.fecha_inicial_string | date('F jS, Y')}} - {{concurso.fecha_final_string | date('F jS, Y')}}
+                        </span>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!--
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                {{concurso.descripcion | raw}}
+            </div>
+        </div>
+        <hr>
+        //-->
+        {% if rango.enrango %}
+            <div class="row">
+                <div class="col-lg-12" align = "center">
+                    <a href="/{{concurso.url_concurso}}/new" class="btn btn-info">
+                        <span class="glyphicon glyphicon-cloud-upload"></span> Subir Mi vídeo
+                    </a>
+                </div>
+            </div>
+            <hr>
+        {% endif %}
+        {% if rango.enrango or rango.terminado %}
+            <div class="row">
+                <!--
+                <div class="col-lg-12">
+                    <h1 class="page-header">Listado de Vídeos</h1>
+                </div>
+                //-->
+                <div class="col-lg-12" id = "videos">
+                </div>
+                <div class="col-lg-12" align = "center">
+                    <div id = "paginar"></div>
+                </div>
+            </div>
+        {% else %}
+            <center>
+                <h2>El concurso no ha iniciado</h2>
+                <p>{{concurso.fecha_inicial_string | date('F jS, Y')}} - {{concurso.fecha_final_string | date('F jS, Y')}}</p>
+                <hr>
+                <h3>Tiempo restante inicio concurso</h3><br>
+                <ul id = "countdown">
+                    <li>
+                        <span class="days">00</span>
+                        <p class="timeRefDays">Días</p>
+                    </li>
+                    <li>
+                        <span class="hours">00</span>
+                        <p class="timeRefHours">Horas</p>
+                    </li>
+                    <li>
+                        <span class="minutes">00</span>
+                        <p class="timeRefMinutes">Minutos</p>
+                    </li>
+                    <li>
+                        <span class="seconds">00</span>
+                        <p class="timeRefSeconds">Segundos</p>
+                    </li>
+                </ul>
+            </center>
+        {% endif %}        
+    </div>
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10">                    
+                    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                        <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+                        <a class="a2a_button_facebook"></a>
+                        <a class="a2a_button_twitter"></a>
+                        <a class="a2a_button_linkedin"></a>
+                        <a class="a2a_button_google_plus"></a>
+                    </div>
+                    <script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+                    <p class="copyright text-muted">Copyright &copy; SmartTools 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <!-- <script src="vendor/jquery/jquery.min.js"></script> //-->
+    <script src = "//code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Para el contador del concurso //-->
+    <script src="vendor/countdown/countdown.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <!-- <script src="js/jqBootstrapValidation.js"></script> //-->
+    <!-- <script src="js/contact_me.js"></script> //-->
+
+    <!-- Theme JavaScript -->
+    <script src="concurso/clean-blog.min.js"></script>
+    <script src="js/concurso.js"></script>
+    <script>
+        var factoria = function()
+        {
+            var data = {
+                            token_concurso : "{{concurso.token_concurso}}", 
+                            url_concurso : "{{concurso.url_concurso}}", 
+                            rango : {{rango.enrango}}, 
+                            terminado : {{rango.terminado}}, 
+                            fecha_inicial : "{{concurso.fecha_inicial_string | date('m-d-Y')}}"};
+            this.getData = function(elemento)
+            {
+                return data[elemento];
+            }
+        }
+    </script>
+</body>
+</html>

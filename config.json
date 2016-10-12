@@ -1,0 +1,11 @@
+{
+    "mail" :
+    {
+        "user" : "usuario@gmail.com",
+        "password" : "password"
+    }, 
+    "sitio" : 
+    {
+    	"url" : "http://localhost:3000"
+    }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{titulo}}</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MetisMenu CSS -->
+    <link href="vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{titulo}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role = "form" id = "form">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" id = "identificacion" placeholder="Identificación" name="identificacion" type="number" autofocus required >
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id = "nombres" placeholder="Nombres" name="nombres" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id = "apellidos" placeholder="Apellidos" name="apellidos" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id = "email" placeholder="E-mail" name="email" type="email">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id = "password" placeholder="Password" name="password" type="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id = "repite_password" placeholder="Repite Password" name="repite_password" type="password" required>
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <input class="form-control" id = "empresa" placeholder="Nombre Empresa" name="empresa" type="text" required>
+                                </div>
+                                <hr>
+                                <button type="submit" class="btn btn-lg btn-success btn-block">Guardar</button>
+                                <div align = "center" style="margin-top:10px;">
+                                    <a href="/login">Ingresar</a> | <a href="/">Regresar</a>
+                                </div>                                    
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src = "//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!-- <script src="vendor/jquery/jquery.min.js"></script> //-->
+    <script src = "vendor/sweetalert/sweetalert.min.js"></script>
+    <script src = "js/register.js"></script>
+</body>
+</html>
