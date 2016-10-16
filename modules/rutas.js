@@ -1,10 +1,13 @@
 "use strict";
 const db   			= 	require('./database'), 
 	  bcrypt    	= 	require('bcrypt-nodejs'), 
+	  fs 			= 	require('fs'), 
+      config 	 	= 	JSON.parse(fs.readFileSync('./config.json', 'utf8')),
 	  passport 		= 	require('passport'), 
 	  concurso		=	require('./concurso'),
-	  videos		=	require('./videos');	 
-	  //db.conectaDatabase();
+	  videos		=	require('./videos'), 
+	  cloudfront 	= 	config.aws.cloudfront;	 
+	  
 //Vista Principal...
 let index = (req, res) => 
 {
@@ -64,7 +67,6 @@ let register = (req, res) =>
 
 let registerPost = (req, res, next) => 
 {
-	//db.administrator.find( { $or: [ { identificacion: "11276127" }, { email: "ostricajh@gmail.com" } ] } )
 	let data 	= req.body,
 		admin 	= db.coleccion("administrator"), 
 		query 	=  {$or : [
@@ -255,7 +257,7 @@ let showConcurso = (req, res) =>
 	{
 		if(!err)
 		{
-			res.render("concurso", {concurso : concurso, rango : rango});			
+			res.render("concurso", {concurso : concurso, rango : rango, cloudfront});			
 		}
 		else
 		{
@@ -282,7 +284,7 @@ let vistaConcursoVideo = (req, res) =>
 		{
 			if(template !== "video")
 			{
-				res.render(template, {concurso : concurso, rango : rango});
+				res.render(template, {concurso : concurso, rango : rango, cloudfront});
 			}
 			else
 			{
@@ -291,7 +293,7 @@ let vistaConcursoVideo = (req, res) =>
 				{
 					if(video)
 					{
-						res.render(template, {concurso : concurso, video, rango : rango});
+						res.render(template, {concurso : concurso, video, rango : rango, cloudfront});
 					}
 					else
 					{

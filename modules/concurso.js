@@ -1,9 +1,11 @@
 "use strict";
 const db   	        = require('./database'), 
       filessystem 	= require('fs'), 
+      config 	 	= JSON.parse(filessystem.readFileSync('./config.json', 'utf8')),
 	  utils			= require('./utils'), 
       moment        = require('moment'), 
       striptags     = require('striptags'),
+      S3FS          = require('s3fs'),
       maximoPagina  = 5;
 
 //Para saber si un enlace ya existe...
@@ -73,8 +75,6 @@ let getConcurso = (type, param, callback) =>
         {
             callback(true);
         }
-        //console.log("INGRESA ACÁ");
-        //console.log(doc);
     });
 };
 
@@ -90,7 +90,6 @@ let guardaEditaConcurso = (token_concurso, registros, callback) =>
         (err, object) => 
         {
             if (err) console.warn("Error", err.message);
-            //console.log(object);
             callback(null, object);
         }
     );
@@ -100,8 +99,9 @@ let guardaEditaConcurso = (token_concurso, registros, callback) =>
 let crearConcurso = (req, callback) => 
 {
     let data = req.body, 
+        s3fsImpl   = new S3FS(config.aws.bucket, {accessKeyId : config.aws.accessKeyId, secretAccessKey : config.aws.secretAccessKey}),
         editar = data.token_concurso === "" ? false : true,
-        token_concurso = data.token_concurso === "" ? utils.guid() : data.token_concurso,  
+        token_concurso = data.token_concurso === "" ? utils.guid() : data.token_concurso,
         existeArchivo = true, 
         fecha = {
                         fecha_actual : moment().format("YYYY-MM-DD HH:MM:SS"), 
@@ -110,7 +110,7 @@ let crearConcurso = (req, callback) =>
                 }; 
     //Sabe si existe un archivo...    
     if (!req.files)
-    {        
+    {
         callback(true, "No existe archivo para subir");        
     }
     else
@@ -124,12 +124,11 @@ let crearConcurso = (req, callback) =>
             }
         }
     }    
-    let directorio      = `./uploadedfiles/${req.user.identificacion}`,
-        banner	        = `${directorio}/banner`, 
+    let directorio      = `./tmpFiles`, 
         sampleFile      = existeArchivo ? req.files.sampleFile : "", 
         extension       = existeArchivo ? sampleFile.mimetype.split("/") : "",
         nombreBanner    = existeArchivo ? `${utils.guid()}.${extension[1]}` : "",
-        uploadPath      = `${banner}/${nombreBanner}`, 
+        uploadPath      = `${directorio}/${nombreBanner}`, 
         nombre_concurso = striptags(data.nombre_concurso), 
         url_concurso    = striptags(data.url_concurso).toLowerCase(), 
         fecha_inicial   = striptags(data.fecha_inicial), 
@@ -173,8 +172,6 @@ let crearConcurso = (req, callback) =>
                 {
                     //Directorio del administrador...
                     utils.crearDirectorio(directorio);
-                    //Directorio del concurso...
-                    utils.crearDirectorio(banner);
                 }
                 if(existeArchivo)
                 {
@@ -187,9 +184,19 @@ let crearConcurso = (req, callback) =>
                         else
                         {
                             registros.banner = nombreBanner;
-                            guardaEditaConcurso(token_concurso, registros, (err, response) => 
+                            //Subir a S3 la Imagen...
+                            let stream      = filessystem.createReadStream(uploadPath), 
+                                folderS3    = `${req.user.identificacion}/banner/${nombreBanner}`;
+                            var params = {Bucket: s3fsImpl.bucket, Key: folderS3, Body: stream, ACL : "public-read-write"};
+                            s3fsImpl.s3.upload(params, (err, data) =>  
                             {
-                                callback(false, "Registro realizado");
+                                console.log(err, data);
+                                console.log(uploadPath);
+                                filessystem.unlinkSync(uploadPath);
+                                guardaEditaConcurso(token_concurso, registros, (err, response) => 
+                                {
+                                    callback(false, "Registro realizado");
+                                });
                             });
                         }
                     });

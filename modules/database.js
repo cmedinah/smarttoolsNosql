@@ -1,5 +1,7 @@
 "use strict";
-const MongoClient = require("mongodb").MongoClient,
+const fs            = require('fs'),
+      config 	 	= JSON.parse(fs.readFileSync('./config.json', 'utf8')), 
+      MongoClient = require("mongodb").MongoClient,
       esquemas    = {
                         administrator   : "", 
                         concourse       : "", 
@@ -8,7 +10,7 @@ const MongoClient = require("mongodb").MongoClient,
 
 let conectaMongo = (callback) => 
 {
-    MongoClient.connect("mongodb://127.0.0.1:27017/smarttools", function(err, database)
+    MongoClient.connect(`mongodb://${config.db.userPass}${config.db.server}:${config.db.port}/${config.db.database}`, (err, database) => 
     {
         if(err) throw err;
         esquemas.administrator = database.collection("administrator");

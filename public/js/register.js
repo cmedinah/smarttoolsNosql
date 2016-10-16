@@ -75,11 +75,4 @@ $(function()
         }
         return false;
     });
-    /*
-    var validaEmail = function(email)
-	{
-		var emailReg = /^([\da-zA-Z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
-        return emailReg.test(email);
-	};
-    */
 });

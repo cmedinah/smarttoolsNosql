@@ -67,7 +67,8 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('/static/{{concurso.identificacion}}/banner/{{concurso.banner}}')">
+    <!-- {{cloudfront}} //-->
+    <header class="intro-header" style="background-image: url('{{cloudfront}}/{{concurso.identificacion}}/banner/{{concurso.banner}}')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -184,7 +185,8 @@
         {
             var data = {
                             token_concurso : "{{concurso.token_concurso}}", 
-                            url_concurso : "{{concurso.url_concurso}}", 
+                            url_concurso : "{{concurso.url_concurso}}",
+                            cloudfront : "{{cloudfront}}",  
                             rango : {{rango.enrango}}, 
                             terminado : {{rango.terminado}}, 
                             fecha_inicial : "{{concurso.fecha_inicial_string | date('m-d-Y')}}"};

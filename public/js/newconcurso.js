@@ -2,12 +2,6 @@ $(function()
 {   
     var token_concurso = $("#token_concurso").val(), 
         editar         = token_concurso === "" ? false : true;
-    /* 
-    if($("#token_concurso").val() !== "")
-    {
-        console.log($("#token_concurso").val());    
-    }
-    */
     $('.summernote').summernote({
         height: 200,
         tabsize: 2
@@ -49,11 +43,6 @@ $(function()
             dia          = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
             fecha_actual = new Date(date.getFullYear() + "-" + mes + "-" + dia), 
             procesa      = true;
-        /*
-        console.log(fecha_actual);
-        console.log(+fecha_inicia);
-        console.log(+fecha_actual);
-        */
         if(!editar)
         {
             if(+fecha_inicia !== +fecha_actual)

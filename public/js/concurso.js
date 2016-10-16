@@ -8,6 +8,7 @@ $(function()
         url_concurso    = privado.getData("url_concurso"),
         en_rango        = privado.getData("rango"),
         terminado       = privado.getData("terminado"),
+        cloudfront      = privado.getData("cloudfront"),
         fecha_inicial     = privado.getData("fecha_inicial"),
         nomServicios    = {
                                 numvideos : {metodo : "GET"},
@@ -76,7 +77,7 @@ $(function()
                       "Duración: " + (data[i].duracion_string) + "</span>";
             //<img src="cinqueterre.jpg" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
             table += "<tr><td width = '20%'><center>" + 
-                     "<a href = '"+(urlVideo)+"'><img src = '/static/"+(data[i].identificacion)+"/videos/thumbnail/"+(data[i].token_archivo)+".png' class = 'img-thumbnail' width = '100' height = '100' border = '0'></a>" + 
+                     "<a href = '"+(urlVideo)+"'><img src = '"+(cloudfront)+"/"+(data[i].identificacion)+"/videos/thumbnail/"+(data[i].token_archivo)+".png' class = 'img-thumbnail' width = '100' height = '100' border = '0'></a>" + 
                      "<center></td>" + 
                      "<td>" + (txt) + "</td></tr>";
             /*

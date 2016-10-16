@@ -33,7 +33,6 @@ $(function()
                 servicio.datos = JSON.stringify(opciones.data);   
             }
         }
-        //console.log(servicio.url);
 		//Invocar el servicio...
 		$.ajax(
 		{

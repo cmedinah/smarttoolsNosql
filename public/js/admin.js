@@ -129,73 +129,7 @@ $(function()
                                 break;
                 }
             });
-            //$("#concursos")
-            //var fecha = new Date(data[i].fecha_final);
-            //Para llamar la opción de editar...
-            //newconcurso/"+(data[i].token_concurso)+"
-            /*
-            table += "<tr>" + 
-                    "<td><h5><a href = '/"+(data[i].url_concurso)+"' target = '_blank'>"+(data[i].nombre_concurso)+"</a></h5></td>" + 
-                    "<td>"+(data[i].fecha_inicial)+"</td>" +
-                    "<td>"+(data[i].fecha_final)+"</td>" +
-                    "<td>"+(opciones)+"</td>" +
-                    "</tr>";
-            */
         }
-        //table += "</tbody></table>";
-        //$("#concursos").html(table);
-        //numeroPagina
-        /*
-        <!-- Single button -->
-        <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Action <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-        </ul>
-        </div>
-        */
-
-
-
-        
-
-
-
-        /*
-        <table class="table">
-        <thead>
-        <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-
-        <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-    </tbody>
-  </table>
-        */
     };
 
     //Para traer los concurso...

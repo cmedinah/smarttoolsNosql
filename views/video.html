@@ -68,7 +68,7 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('/static/{{concurso.identificacion}}/banner/{{concurso.banner}}')">
+    <header class="intro-header" style="background-image: url('{{cloudfront}}/{{concurso.identificacion}}/banner/{{concurso.banner}}')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -89,23 +89,10 @@
         <div class="col-lg-12" align = "center">
             <h1>{{video.titulo_video}}</h1><hr>
         </div>
-        <!--
-        <div class="col-lg-12 col-lg-offset-5 col-md-12">                    
-                    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-                        <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-                        <a class="a2a_button_facebook"></a>
-                        <a class="a2a_button_twitter"></a>
-                        <a class="a2a_button_linkedin"></a>
-                        <a class="a2a_button_google_plus"></a>
-                    </div>
-                    <script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-                </div>
-        //-->
-
         <div class="col-lg-12" align = "center">
             <video id="my-video" class="art-preview lazy video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="640" height="350"
-            poster="/static/{{video.identificacion}}/videos/thumbnail/{{video.token_archivo}}.png" data-setup="{}">
-                <source src="/static/{{video.identificacion}}/videos/convert/{{video.token_archivo}}.mp4" type='video/mp4'>
+            poster="{{cloudfront}}/{{video.identificacion}}/videos/thumbnail/{{video.token_archivo}}.png" data-setup="{}">
+                <source src="{{cloudfront}}/{{video.identificacion}}/videos/convert/{{video.token_archivo}}.mp4" type='video/mp4'>
                 <p class="vjs-no-js">
                 To view this video please enable JavaScript, and consider upgrading to a web browser that
                 <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
@@ -125,17 +112,6 @@
                 <hr>
             </div>
         </div>
-        <!--
-        <hr>
-        <div class="row">
-            <div class="col-lg-12" align = "center">
-                <a href="/{{concurso.url_concurso}}/new" class="btn btn-info">
-                    <span class="glyphicon glyphicon-cloud-upload"></span> Subir Mi vídeo
-                </a>
-            </div>
-        </div>
-        <hr>
-        //-->
     </div>
 
     <hr>
@@ -150,18 +126,11 @@
             </div>
         </div>
     </footer>
-
     <!-- jQuery -->
     <!-- <script src="vendor/jquery/jquery.min.js"></script> //-->
     <script src = "//code.jquery.com/jquery-2.2.4.min.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Contact Form JavaScript -->
-    <!-- <script src="js/jqBootstrapValidation.js"></script> //-->
-    <!-- <script src="js/contact_me.js"></script> //-->
-
     <!-- Theme JavaScript -->
     <script src="../concurso/clean-blog.min.js"></script>
     <!-- <script src="../videojs/video.js"></script> //-->

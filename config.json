@@ -1,11 +1,43 @@
 {
     "mail" :
     {
-        "user" : "usuario@gmail.com",
-        "password" : "password"
+        "user" : "cuentagmail@gmail.com",
+        "password" : "passwordgmail"
     }, 
     "sitio" : 
     {
     	"url" : "http://localhost:3000"
+    }, 
+    "secret" : "", 
+    "aws" :
+    {
+        "bucket" : "",   
+        "accessKeyId" : "", 
+        "secretAccessKey" : "", 
+        "region": "", 
+        "cloudfront" : "",
+        "elasticache" : 
+        {
+            "url" : "", 
+            "port" : 6379
+        }, 
+        "ses" : 
+        {
+            "accessKeyId" : "", 
+            "secretAccessKey" : "", 
+            "sendEmail" : ""
+        },
+        "sqs" : 
+        {
+            "Queue" : "", 
+            "queueUrl" : ""
+        }
+    }, 
+    "db" : 
+    {
+        "database" : "smarttools", 
+        "userPass" : "", 
+        "server" : "127.0.0.1", 
+        "port" : 27017
     }
 }

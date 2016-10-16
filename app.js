@@ -1,5 +1,6 @@
 "use strict";
 const express 			= 	require("express"),
+	  redis   			= 	require("redis"), 
 	  app				= 	express(),
 	  cons 				=	require("consolidate"),
 	  puerto 			= 	process.env.PORT || 3000,
@@ -8,10 +9,14 @@ const express 			= 	require("express"),
 	  LocalStrategy 	= 	require('passport-local').Strategy,
 	  cookieParser 		= 	require('cookie-parser'),
 	  session 			= 	require('express-session'),
+	  redisStore 		= 	require('connect-redis')(session),
 	  bcrypt 			= 	require('bcrypt-nodejs'),
 	  db   				= 	require('./modules/database'),
 	  rutas				=	require('./modules/rutas'), 
-	  fileUpload 		= 	require('express-fileupload'); 
+	  fileUpload 		= 	require('express-fileupload'), 
+      filessystem 	    =   require('fs'),
+      config 	 	    =   JSON.parse(filessystem.readFileSync('config.json', 'utf8')),
+	  client  			= 	redis.createClient(config.aws.elasticache.port, config.aws.elasticache.url); 
 	
 	//Para el manejo de autenticación...
 	passport.use(new LocalStrategy((username, password, done) => 
@@ -44,8 +49,6 @@ const express 			= 	require("express"),
 		});
 	});
 	//Fin del manejo de passport
-
-	//db.conectaDatabase();
 	//consolidate integra swig con express...
 	app.engine("html", cons.swig); //Template engine...
 	app.set("view engine", "html");
@@ -60,16 +63,15 @@ const express 			= 	require("express"),
 
 	//Para el manejo de las Cookies...
 	app.use(cookieParser());
-	app.use(session({
-						secret: '$2a$10$GsvafBLCODG.gUNlB987fORJjTiwjiKs42MjAIqTMB3lour44n39K',
-						cookie: { maxAge: 6000000 },
-						resave: true,
-						saveUninitialized: true
-					}));
-	//app.use(session({secret: '$2a$10$GsvafBLCODG.gUNlB987fORJjTiwjiKs42MjAIqTMB3lour44n39K'}));
+    app.use(session({
+                        secret: config.secret,
+                        cookie: { maxAge: 6000000 },
+                        resave: true,
+                        saveUninitialized: true, 
+                        store: new redisStore({ client: client , ttl :  260})
+                    }));
 	app.use(passport.initialize());
 	app.use(passport.session());
-	
 	//Rutas/Servicios REST
 	app.get("/", rutas.index);
 	app.get("/admin", rutas.admin);
@@ -97,26 +99,19 @@ const express 			= 	require("express"),
 	app.delete('/eliminaconcurso/:token', rutas.eliminaConcurso);
 	//Para eliminar un video
 	app.delete('/eliminarvideo/:token', rutas.eliminarvideo);
-	//Para mostrar el concurso...
-	//app.get('/concurso/:url/:video', rutas.listarConcursos);
 	//Para saber el total de vídeos que tiene un adminsitrador
 	app.get('/numvideosAdmin', rutas.numeroVideosAdmin);
 	app.get('/getvideosAdmin/:page', rutas.listadoVideosAdmin);
 	app.get('/:url', rutas.showConcurso);
 	//Para ver si se pueden recibir dos variables...
 	app.get('/:url/:accion', rutas.vistaConcursoVideo);
-	//Para las reglas de juego...
-	//app.get('/:url/:rules', rutas.rulesConcurso);
-	//Para cualquier url que no cumpla la condición...
 	//Para crear/subir, ver detalle un nuevo vídeo...
 	app.post('/newvideo', rutas.newVideoPost);
 	//Para listar los vídeos de un concurso...
 	app.get('/getvideos/:token/:page', rutas.listadoVideos);
-	//Para listar todos los vídeos de una empresa en sus concursos
 	//Para saber el total de vídeos que existe en un concurso..
 	app.get('/numvideos/:token/:page', rutas.numeroVideos);
 	app.get("*", rutas.notFound404);
-	//Fin de ver...
 	//Iniciar el Servidor...
 	db.conectaMongo((err, database) => 
 	{

@@ -1,26 +1,29 @@
 "use strict";
 const db   	        = require('./database'), 
       filessystem 	= require('fs'), 
+      config 	 	= JSON.parse(filessystem.readFileSync('./config.json', 'utf8')),
 	  utils			= require('./utils'), 
       moment        = require('moment'),
       striptags     = require('striptags'),
+      S3FS          = require('s3fs'), 
+      aws           = require('aws-sdk'),
       maximoPagina  = 5;
 
+    
 let newVideo = (req, callback) => 
 {
-    let data = req.body;
+    let data = req.body, 
+        s3fsImpl   = new S3FS(config.aws.bucket, 
+                     {
+                            accessKeyId : config.aws.accessKeyId, 
+                            secretAccessKey : config.aws.secretAccessKey
+                     });
     if (!req.files)
     {
         callback(true, "No existe archivos para subir");
     }
-    let directorio      = `./uploadedfiles/${data.identificacion}`,
-        folderVideos    = `${directorio}/videos`, 
+    let directorio      = `./tmpFiles`,
         extensionValida = ["avi", "wmv", "flv", "mov", "mp4", "webm"], 
-        videoUbicacion  = {
-                                original    : `${folderVideos}/org`,
-                                convertido  : `${folderVideos}/convert`,
-                                thumbnail   : `${folderVideos}/thumbnail`
-                            },
         sampleFile      =  req.files.sampleFile, 
         nombre_archivo  =  sampleFile.name, 
         parteNombre     =  nombre_archivo.split("."),
@@ -28,7 +31,7 @@ let newVideo = (req, callback) =>
         token_archivo   =  utils.guid(),
         token_video     =  utils.guid(), 
         nombreArchivo   =  `${token_archivo}.${extension}`,
-        uploadPath      = `${videoUbicacion.original}/${nombreArchivo}`, 
+        uploadPath      = `${directorio}/${nombreArchivo}`, 
         titulo_video    =  striptags(data.titulo_video), 
         nombre_usuario  =  striptags(data.nombre_usuario), 
         email           =  striptags(data.email);
@@ -69,15 +72,6 @@ let newVideo = (req, callback) =>
         }
         //Crear el directorio principal, sí es que no existe...
         utils.crearDirectorio(directorio);
-        //Crear la carpeta de vídeos...
-        utils.crearDirectorio(folderVideos);
-        //Para crear los demás folders que se manejarán...
-        let keyUbica = Object.keys(videoUbicacion); 
-        for(let i = 0; i < keyUbica.length; i++)
-        {
-            utils.crearDirectorio(videoUbicacion[keyUbica[i]]);
-        }
-        
         let fechas = {
                                     fecha_actual : moment().format(), 
                                     fecha_string : moment().format("DD/MM/YYYY"),
@@ -105,17 +99,42 @@ let newVideo = (req, callback) =>
                 callback(true, "No ha sido posible subir el vídeo");
             }
             else
-            {                
-                //Guardar el registro...
-                //Actualizar el valor del banner...                
-                db.coleccion("video").insert(data, function(err, doc)
+            {
+                //Crear los folder en S3...
+                let stream      = filessystem.createReadStream(uploadPath), 
+                    folderS3    = `${data.identificacion}/videos/org/${nombreArchivo}`;
+                var params = {Bucket: s3fsImpl.bucket, Key: folderS3, Body: stream, ACL : "public-read-write"};
+                s3fsImpl.s3.upload(params, function(err, s3) 
                 {
-                    if (err) console.warn("Error guardaAdmin", err.message);
-                    if(doc.result.ok === 1)
+                    console.log(err, s3);
+                    db.coleccion("video").insert(data, function(err, doc)
                     {
-                        //res.json({error : false});
-                        callback(false, doc);
-                    }
+                        //Para eliminar el archivo localmente...
+                        filessystem.unlinkSync(uploadPath);
+                        if (err) console.warn("Error guardaAdmin", err.message);
+                        if(doc.result.ok === 1)
+                        {
+                            //Crear una cola indicando que existe un vídeo por procesar...
+                            aws.config.update({
+                                                    accessKeyId: config.aws.accessKeyId,
+                                                    secretAccessKey: config.aws.secretAccessKey, 
+                                                    region: config.aws.region
+                                              });
+                            let  sqs     = new aws.SQS(), 
+                                 params  = {
+                                                MessageBody: JSON.stringify({token_video : token_video, type : "convert"}),
+                                                QueueUrl: config.aws.sqs.queueUrl,
+                                                DelaySeconds: 0
+                                            };
+                            sqs.sendMessage(params, (err, data) => 
+                            {
+                                if(!err)
+                                {
+                                    callback(false, doc);
+                                }
+                            });
+                        }
+                    });
                 });
             }
         });        
@@ -139,20 +158,6 @@ let totalRegistrosVideosAdmin = (identificacion, callback) =>
         if (err) console.warn("Error total Vídeos", err.message);        
         callback(err, {total, maximoPagina, numPagina : Math.ceil(total / maximoPagina)});
     });
-    /*
-    let sql = `select count(*) as numero 
-               from concursos a,  
-                    concursos_videos b 
-               where a.idadministrador = '${id_admin}' and 
-                     b.idconcurso = a.idconcurso`;
-    db.queryMysql(sql, (err, data) => 
-    {
-        if (err) throw err;
-        let total     = data[0].numero, 
-            numPagina = Math.ceil(total / maximoPagina);
-        callback("", {total, maximoPagina, numPagina});
-    });
-    */
 };
 
 //LLevar el listado de vídeos...
